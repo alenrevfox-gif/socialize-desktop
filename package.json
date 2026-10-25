@@ -8,9 +8,9 @@
   "main": "desktop/main.js",
   "scripts": {
     "start": "electron .",
-    "pack:win": "electron-builder --win nsis --x64 --dir",
-    "dist:win": "electron-builder --win portable --x64",
-    "installer:win": "electron-builder --win nsis --x64"
+    "pack:win": "electron-builder --win nsis --x64 --dir --publish never",
+    "dist:win": "electron-builder --win portable --x64 --publish never",
+    "installer:win": "electron-builder --win nsis --x64 --publish never"
   },
   "devDependencies": {
     "electron": "45.0.0",
