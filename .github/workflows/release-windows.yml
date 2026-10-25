@@ -61,7 +61,7 @@ jobs:
           $version = $env:GITHUB_REF_NAME
           Compress-Archive -Path release/signed/* -DestinationPath "release/Socialize-$version-windows-x64.zip" -Force
 
-      - name: Package initial unsigned app
+      - name: Package unsigned app
         if: ${{ vars.SIGNPATH_READY != 'true' }}
         shell: pwsh
         run: |
@@ -75,5 +75,8 @@ jobs:
           body: |
             Download the Windows app ZIP and extract it before launching Socialize.
 
+            If the file name ends in `-unsigned.zip`, it is unsigned and Windows may show a security warning or block it. Signing will be enabled only after SignPath Foundation approval and configuration.
+
             See the [Socialize code signing policy](https://github.com/${{ github.repository }}/blob/main/README.md#code-signing-policy).
           files: release/Socialize-${{ github.ref_name }}-windows-x64*.zip
+
