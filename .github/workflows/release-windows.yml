@@ -1,0 +1,78 @@
+name: Windows release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  build-sign-release:
+    runs-on: windows-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.25.0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.12.0
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Windows app folder
+        run: pnpm pack:win
+
+      - name: Upload unsigned app files
+        id: upload-unsigned
+        uses: actions/upload-artifact@v7
+        with:
+          name: socialize-windows-unsigned
+          path: release/win-unpacked/**
+          if-no-files-found: error
+
+      - name: Sign app files with SignPath Foundation
+        if: ${{ vars.SIGNPATH_READY == 'true' }}
+        uses: signpath/github-action-submit-signing-request@v3
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+          signing-policy-slug: ${{ vars.SIGNPATH_SIGNING_POLICY_SLUG }}
+          artifact-configuration-slug: ${{ vars.SIGNPATH_ARTIFACT_CONFIGURATION_SLUG }}
+          github-artifact-id: ${{ steps.upload-unsigned.outputs.artifact-id }}
+          wait-for-completion: true
+          output-artifact-directory: release/signed
+
+      - name: Package signed app
+        if: ${{ vars.SIGNPATH_READY == 'true' }}
+        shell: pwsh
+        run: |
+          $version = $env:GITHUB_REF_NAME
+          Compress-Archive -Path release/signed/* -DestinationPath "release/Socialize-$version-windows-x64.zip" -Force
+
+      - name: Package initial unsigned app
+        if: ${{ vars.SIGNPATH_READY != 'true' }}
+        shell: pwsh
+        run: |
+          $version = $env:GITHUB_REF_NAME
+          Compress-Archive -Path release/win-unpacked/* -DestinationPath "release/Socialize-$version-windows-x64-unsigned.zip" -Force
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          body: |
+            Download the Windows app ZIP and extract it before launching Socialize.
+
+            See the [Socialize code signing policy](https://github.com/${{ github.repository }}/blob/main/README.md#code-signing-policy).
+          files: release/Socialize-${{ github.ref_name }}-windows-x64*.zip
