@@ -1,0 +1,52 @@
+{
+  "name": "socialize-desktop",
+  "productName": "Socialize",
+  "version": "1.0.0",
+  "description": "A private desktop workspace for your social apps.",
+  "license": "MIT",
+  "author": "Socialize contributors",
+  "main": "desktop/main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack:win": "electron-builder --win nsis --x64 --dir",
+    "dist:win": "electron-builder --win portable --x64",
+    "installer:win": "electron-builder --win nsis --x64"
+  },
+  "devDependencies": {
+    "electron": "45.0.0",
+    "electron-builder": "26.18.0"
+  },
+  "build": {
+    "appId": "org.socialize.desktop",
+    "productName": "Socialize",
+    "files": [
+      "desktop/**/*",
+      "index.html",
+      "app.js",
+      "styles.css",
+      "README.md",
+      "LICENSE",
+      "package.json"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "artifactName": "Socialize-${version}-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  },
+  "packageManager": "pnpm@11.25.0",
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}
+
