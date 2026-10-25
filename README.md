@@ -2,6 +2,10 @@
 
 Socialize is an open-source desktop workspace for Windows. Pick Instagram, X, Telegram, YouTube, Facebook, Reddit, LinkedIn, Threads, or a custom HTTPS website from the sidebar; the site opens in the main Socialize window.
 
+## Use the website in Chrome
+
+The browser version is published at [alenrevfox-gif.github.io/socialize-desktop](https://alenrevfox-gif.github.io/socialize-desktop/). It saves the workspace profile and sidebar choices in the current browser. Website sign-ins belong to Chrome and are separate from the desktop app. Some social services block embedded pages; use the open-in-browser button to use those services in a new tab.
+
 ## Run from source
 
 Install Node.js 22.13 or newer and pnpm, then run:
