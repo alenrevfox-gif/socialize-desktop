@@ -4,7 +4,7 @@ Socialize is an open-source desktop workspace for Windows. Pick Instagram, X, Te
 
 ## Run from source
 
-Install Node.js 22.12 or newer and pnpm, then run:
+Install Node.js 22.13 or newer and pnpm, then run:
 
 ```powershell
 pnpm install
@@ -23,21 +23,22 @@ The portable executable is written to `release/`. It can be launched directly an
 
 Socialize is MIT-licensed. The planned free signing route is the [SignPath Foundation open-source program](https://signpath.org/). Signing is not active yet: the Foundation requires a public source repository and an already released build, and approval is required before it issues a signing certificate. The first public release would therefore be unsigned. SignPath also requires a project code-signing policy and a GitHub-hosted release workflow.
 
-The workflow in `.github/workflows/release-windows.yml` builds Socialize on a GitHub-hosted Windows runner. Before SignPath approval, it publishes a clearly named unsigned archive, which is needed for the initial release and application. After the project is accepted, configure the approved SignPath project settings and set the repository variable `SIGNPATH_READY` to `true`; tagged releases will then be signed before publication. Configure SignPath's artifact format against a sample workflow artifact and sign Socialize's own executable while preserving signatures on third-party files.
+The workflow in `.github/workflows/release-windows.yml` builds Socialize on a GitHub-hosted Windows runner. While signing is unavailable, it publishes a clearly named unsigned archive. After the project is accepted, configure the approved SignPath project settings and GitHub credentials below, then set the repository variable `SIGNPATH_READY` to `true`; tagged releases will then be submitted for signing before publication. Each signing request requires manual approval. Configure SignPath's artifact format against a sample workflow artifact and sign Socialize's own executable while preserving signatures on third-party files. The existing `v1.0.0` download remains unsigned; it must be replaced by a newly built release after signing is active.
 
 - Secret: `SIGNPATH_API_TOKEN`
 - Variables: `SIGNPATH_ORGANIZATION_ID`, `SIGNPATH_PROJECT_SLUG`, `SIGNPATH_SIGNING_POLICY_SLUG`, and `SIGNPATH_ARTIFACT_CONFIGURATION_SLUG`
 
-To get started, publish the source repository and an initial release, then apply through the [SignPath Foundation application](https://signpath.org/apply.html). Review its [eligibility terms](https://signpath.org/terms.html) first. They require an actively maintained open-source project, a release, and a public code-signing policy. Do not add SignPath tokens to source files or commit them to Git.
+The source repository and first release are already public. The next step is to apply through the [SignPath Foundation application](https://signpath.org/apply.html), after reviewing its [eligibility terms](https://signpath.org/terms.html). The Foundation must approve the project and issue access before signing can be enabled. Do not add SignPath tokens to source files or commit them to Git.
 
 ### Code signing policy
 
-**Status:** Socialize has not yet been accepted into the SignPath Foundation program. Current downloads are unsigned.
+**Current status:** Socialize has not yet been accepted into the SignPath Foundation program. Current downloads, including `v1.0.0`, are unsigned and may trigger Windows Smart App Control or other reputation warnings.
 
-If accepted, the official Windows release will state: “Free code signing provided by SignPath.io, certificate by SignPath Foundation.” Only release artifacts built by the GitHub Actions workflow in this repository will be submitted for signing.
+**After acceptance:** “Free code signing provided by SignPath.io, certificate by SignPath Foundation.” Only release artifacts built by the GitHub Actions workflow in this repository will be submitted. Each request must be manually approved before the signed build is published.
 
-- **Authors and reviewers:** [alenrevfox-gif](https://github.com/alenrevfox-gif), the current project maintainer.
-- **Approver:** [alenrevfox-gif](https://github.com/alenrevfox-gif), the current project maintainer.
+- **Authors and committers:** [alenrevfox-gif](https://github.com/alenrevfox-gif), the current project maintainer.
+- **Reviewers:** The project maintainer reviews and approves contributions from other contributors before merging them.
+- **Approver:** [alenrevfox-gif](https://github.com/alenrevfox-gif), the current project maintainer. SignPath's separate manual approval is required for each signing request.
 - **Privacy:** Socialize stores its profile and preferences locally. It contacts social websites when the user opens and uses them; it does not upload profile data to a Socialize server. “This program will not transfer any information to other networked systems unless specifically requested by the user or the person installing or operating it.”
 
 ## Sign-ins and privacy
@@ -61,6 +62,7 @@ Social sites run in sandboxed Electron `WebContentsView`s with Node integration 
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
 
 
 
